@@ -33,7 +33,7 @@ function search(contactName) {
         var properties = {};
         properties[promptQuestion] = {
           pattern: /^[1-9]+$/,
-          message: 'Choice must be only letters',
+          message: 'Choice must be a number',
           required: true
         }
         var schema = {
