@@ -47,9 +47,9 @@ if (process.argv[3]) {
     }
 
     else {
-      throw new Error ('Please input a valid phone number');
+      console.log ('Please input a valid phone number');
     }
-    phoneNumber = Number('+234' + rawNumber);
+    phoneNumber = '+234' + rawNumber;
   }
 
   if (process.argv.indexOf('-e') !== -1) {

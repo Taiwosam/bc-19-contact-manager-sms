@@ -5,6 +5,10 @@ var prompt = require('prompt');
 
 function search(contactName) {
   loadJsonFile('contacts.json').then(contacts => {
+
+    // Contact names are stored with the first letters in upper case.
+    // A user should get a result with a search query in any case.
+    contactName = contactName[0].toUpperCase() + contactName.slice(1).toLowerCase();
     if (contacts[contactName]) {
       console.log ('\n\n');
       console.log(`Phone Number: ${contacts[contactName][0]} Email: ${contacts[contactName][1]}`);
