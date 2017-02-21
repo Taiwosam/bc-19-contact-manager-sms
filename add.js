@@ -2,10 +2,6 @@
 var writeJsonFile = require('write-json-file');
 var loadJsonFile = require('load-json-file');
 
-if (process.argv[2] === 'init') {
-  writeJsonFile('contacts.json', {});
-}
-
 function addContact(contactName, phoneNumber, email) {
   if (!phoneNumber && !email) {
     console.log ('\n\n Contact must have phone number and/or email address \n\n');
@@ -70,6 +66,10 @@ if (process.argv[3]) {
   }
 
   addContact(contactName, phoneNumber, email);
+}
+
+else if (process.argv[2] === 'init') {
+  writeJsonFile('contacts.json', {});
 }
 
 else {
