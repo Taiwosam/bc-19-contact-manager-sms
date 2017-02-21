@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var writeJsonFile = require('write-json-file');
 var loadJsonFile = require('load-json-file');
+var prompt = require('prompt');
 
 function search(contactName) {
   loadJsonFile('contacts.json').then(contacts => {
@@ -24,9 +25,25 @@ function search(contactName) {
       }
 
       else {
-        console.log(`\n\nWhich ${contactName}?\n`);
+        var promptQuestion = `\n\nWhich ${contactName}?\n`;
         likelyContacts.forEach((contact, index) => {
-          console.log(`[${index + 1}]: ${contact}`);
+          promptQuestion += `[${index + 1}]: ${contact}\n`;
+        });
+
+        var properties = {};
+        properties[promptQuestion] = {
+          pattern: /^[1-9]+$/,
+          message: 'Choice must be only letters',
+          required: true
+        }
+        var schema = {
+            properties
+          };
+
+        prompt.start()
+
+        prompt.get(schema, function (err, result) {
+          search(likelyContacts[ result[promptQuestion] - 1 ]);
         });
       }
     }
