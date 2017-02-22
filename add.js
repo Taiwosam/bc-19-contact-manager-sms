@@ -11,45 +11,57 @@ function addContact(contactName, phoneNumber, email) {
 
   loadJsonFile('contacts.json').then(contacts => {
     if (contacts[contactName]) {
-      var promptStr = `\n\n${contactName} already exists. Do you want to override contact? (Y/N)\n`;
+      if (!!email && !contacts[contactName][1]) {
+        contacts[contactName][1] = email;
+        writeJsonFile('contacts.json', contacts);
+      }
 
-      prompt.start();
-      prompt.get(promptStr, function(err, result) {
-        result[promptStr] = result[promptStr].toLowerCase();
+      else if (!!phoneNumber && !contacts[contactName][0]) {
+        contacts[contactName][0] = phoneNumber;
+        writeJsonFile('contacts.json', contacts);
+      }
 
-        if (result[promptStr] === 'y') {
-          contacts[contactName] = [null, null];
+      else {
+      	var promptStr = `\n\n${contactName} already exists. Do you want to override contact? (Y/N)\n`;
 
-          if (isDuplicateNumber(phoneNumber, contacts)) {
-            var promptMessage = isDuplicateNumber(phoneNumber, contacts);
-            prompt.start();
+        prompt.start();
+        prompt.get(promptStr, function(err, result) {
+          result[promptStr] = result[promptStr].toLowerCase();
 
-            prompt.get(promptMessage, function(err, result) {
-              if (result[promptMessage].toLowerCase() === 'y') {
-                contacts[contactName][0] = phoneNumber;
-                contacts[contactName][1] = email;
-                if (contacts[contactName][0] === null && contacts[contactName][1] === null) {
-                  delete contacts[contactName];
-                  writeJsonFile('contacts.json', contacts);
+          if (result[promptStr] === 'y') {
+            contacts[contactName] = [null, null];
+
+            if (isDuplicateNumber(phoneNumber, contacts)) {
+              var promptMessage = isDuplicateNumber(phoneNumber, contacts);
+              prompt.start();
+
+              prompt.get(promptMessage, function(err, result) {
+                if (result[promptMessage].toLowerCase() === 'y') {
+                  contacts[contactName][0] = phoneNumber;
+                  contacts[contactName][1] = email;
+                  if (contacts[contactName][0] === null && contacts[contactName][1] === null) {
+                    delete contacts[contactName];
+                    writeJsonFile('contacts.json', contacts);
+                  }
+
+                  else {
+                    writeJsonFile('contacts.json', contacts);
+                  }
                 }
+              });
+            }
 
-                else {
-                  writeJsonFile('contacts.json', contacts);
-                }
-              }
-            });
+            else {
+              contacts[contactName] = [phoneNumber, email];
+              writeJsonFile('contacts.json', contacts);
+            }
           }
 
           else {
-            contacts[contactName] = [phoneNumber, email];
-            writeJsonFile('contacts.json', contacts);
+            process.exit();
           }
-        }
-
-        else {
-          process.exit();
-        }
-      });
+        });
+      }
     }
 
     else {
@@ -130,7 +142,8 @@ if (/^[a-zA-Z]+$/.exec(process.argv[3])) {
   }
 
   else {
-    console.log ('\n\n Contact must have a name \n\n'.red.bold);
+    console.log ('\n\n Please input the -n flag. \n\n'.red.bold);
+    process.exit();
   }
 
   if (process.argv.indexOf('-p') !== -1) {
@@ -141,6 +154,7 @@ if (/^[a-zA-Z]+$/.exec(process.argv[3])) {
 
     else {
       console.log ('\n\nPlease input a valid phone number\n'.red.bold);
+      process.exit();
     }
     phoneNumber = '+234' + rawNumber;
   }
@@ -155,6 +169,7 @@ if (/^[a-zA-Z]+$/.exec(process.argv[3])) {
 
     else {
       console.log('\n\nPlease input a valid email\n'.bold.red);
+      process.exit();
     }
   }
 
@@ -167,4 +182,5 @@ else if (process.argv[2] === 'init') {
 
 else {
   console.log('\n\nPlease enter a name \n'.red.bold);
+  process.exit();
 }
