@@ -5,49 +5,43 @@ var prompt = require('prompt');
 var colors = require('colors');
 
 function search(contactName) {
+  contactName = contactName.toLowerCase();
   loadJsonFile('contacts.json').then(contacts => {
 
-    // Contact names are stored with the first letters in upper case.
-    // A user should get a result with a search query in any case.
-    var firstAndLast = contactName.split(' ');
+    var contactNames = Object.keys(contacts);
+    var searchResults = [];
 
-    for (var i in firstAndLast) {
-      firstAndLast[i] = firstAndLast[i][0].toUpperCase() + firstAndLast[i].slice(1).toLowerCase();
+    for (var i of contactNames) {
+      j = i.toLowerCase();
+      if (j.indexOf(contactName) !== -1) {
+        searchResults.push(i);
+      }
     }
 
-    contactName = firstAndLast.join(' ');
-
-    if (contacts[contactName]) {
+    if (searchResults.length === 1 && contacts[searchResults[0]]) {
       console.log ('\n\n');
-      console.log(`Phone Number: ${contacts[contactName][0]} Email: ${contacts[contactName][1]}`.cyan.blue);
+      console.log(`Phone Number: ${contacts[searchResults[0]][0]} Email: ${contacts[searchResults[0]][1]}`.cyan.blue);
       console.log('\n\n');
     }
 
     else {
-      var likelyContacts = []
-      var namesInContacts = Object.keys(contacts);
-      for (var name of namesInContacts) {
-        if (name.indexOf(contactName) !== -1) {
-          likelyContacts.push(name);
-        }
-      }
-
-      if (likelyContacts.length === 0) {
-        console.log('\n\n You do not have a contact with such name \n\n');
+      if (searchResults.length === 0) {
+        console.log('\n\n You do not have a contact with such name \n\n'.red.bold);
       }
 
       else {
-        var promptQuestion = `\n\nWhich ${contactName}?\n`;
-        likelyContacts.forEach((contact, index) => {
-          promptQuestion += `[${index + 1}]: ${contact}\n`;
+        var promptQuestion = `\n\nWhich ${contactName}?\n`.grey.bold;
+        searchResults.forEach((contact, index) => {
+          promptQuestion += `[${index + 1}]: ${contact}\n`.grey.bold;
         });
 
         var properties = {};
         properties[promptQuestion] = {
           pattern: /^[1-9]+$/,
-          message: 'Choice must be a number',
+          message: '\n\nChoice must be a number \n'.red.bold,
           required: true
         }
+
         var schema = {
             properties
           };
@@ -55,7 +49,16 @@ function search(contactName) {
         prompt.start()
 
         prompt.get(schema, function (err, result) {
-          search(likelyContacts[ result[promptQuestion] - 1 ]);
+          if (result[promptQuestion] > searchResults.length) {
+            console.log('\n\n The number you chose is out of range. Please try again. \n\n'.red.bold);
+          }
+
+          else {
+            chosenContact = searchResults[ result[promptQuestion] - 1 ];
+            console.log ('\n\n');
+            console.log(`Phone Number: ${contacts[chosenContact][0]} Email: ${contacts[chosenContact][1]}`.cyan.blue);
+            console.log('\n\n');
+          }
         });
       }
     }
@@ -63,7 +66,7 @@ function search(contactName) {
 }
 
 if (process.argv[2]) {
-  contactName = []
+  contactName = [];
   for (var i of process.argv.slice(2)) {
     contactName.push(i);
   }
@@ -73,5 +76,5 @@ if (process.argv[2]) {
 }
 
 else {
-  console.log('\n\n Please enter a search parameter \n');
+  console.log('\n\n Please enter a search parameter \n'.red.bold);
 }
