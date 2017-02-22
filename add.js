@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 var writeJsonFile = require('write-json-file');
 var loadJsonFile = require('load-json-file');
+var colors = require('colors');
 
 function addContact(contactName, phoneNumber, email) {
   if (!phoneNumber && !email) {
-    console.log ('\n\n Contact must have phone number and/or email address \n\n');
+    console.log ('\n\n Contact must have phone number and/or email address \n\n'.red.bold);
   }
 
   loadJsonFile('contacts.json').then(contacts => {
@@ -13,10 +14,11 @@ function addContact(contactName, phoneNumber, email) {
   });
 }
 
-if (process.argv[3]) {
+if (/^[a-zA-Z]+$/.exec(process.argv[3])) {
   var contactName;
   var phoneNumber;
   var email;
+
   if (process.argv.indexOf('-n') !== -1) {
     var validName = /^[a-zA-Z]+$/;
     var firstAndLast = [];
@@ -37,7 +39,7 @@ if (process.argv[3]) {
   }
 
   else {
-    console.log ('\n\n Contact must have a name \n\n');
+    console.log ('\n\n Contact must have a name \n\n'.red.bold);
   }
 
   if (process.argv.indexOf('-p') !== -1) {
@@ -47,7 +49,7 @@ if (process.argv[3]) {
     }
 
     else {
-      console.log ('Please input a valid phone number');
+      console.log ('\n\nPlease input a valid phone number\n'.red.bold);
     }
     phoneNumber = '+234' + rawNumber;
   }
@@ -61,7 +63,7 @@ if (process.argv[3]) {
     }
 
     else {
-      throw new Error('Please input a valid email');
+      console.log('\n\nPlease input a valid email\n'.bold.red);
     }
   }
 
@@ -73,5 +75,5 @@ else if (process.argv[2] === 'init') {
 }
 
 else {
-  console.log('\n\nPlease enter a name \n');
+  console.log('\n\nPlease enter a name \n'.red.bold);
 }
