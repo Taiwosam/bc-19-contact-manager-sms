@@ -2,6 +2,7 @@
 var writeJsonFile = require('write-json-file');
 var loadJsonFile = require('load-json-file');
 var colors = require('colors');
+var prompt = require('prompt');
 
 function addContact(contactName, phoneNumber, email) {
   if (!phoneNumber && !email) {
@@ -9,8 +10,28 @@ function addContact(contactName, phoneNumber, email) {
   }
 
   loadJsonFile('contacts.json').then(contacts => {
-    contacts[contactName] = [phoneNumber, email];
-    writeJsonFile('contacts.json', contacts);
+    if (contacts[contactName]) {
+      var promptStr = `\n\n${contactName} already exists. Do you want to override contact? (Y/N)\n`;
+
+      prompt.start();
+      prompt.get(promptStr, function(err, result) {
+        result[promptStr] = result[promptStr].toLowerCase();
+
+        if (result[promptStr] === 'y') {
+          contacts[contactName] = [phoneNumber, email];
+          writeJsonFile('contacts.json', contacts);
+        }
+
+        else {
+          process.exit();
+        }
+      });
+    }
+
+    else {
+      contacts[contactName] = [phoneNumber, email];
+      writeJsonFile('contacts.json', contacts);
+    }
   });
 }
 
