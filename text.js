@@ -1,28 +1,59 @@
 var writeJsonFile = require('write-json-file');
 var loadJsonFile = require('load-json-file');
 
+var querystring = require('querystring');
+var https       = require('https');
+
+var username = 'Taiwosam';
+var apikey   = 'a701c6bdbb3d152a6544c7dd29981bc43123bcc10a48ddec804ac8627b2e3b5d';
+
 function sendMessage(to, messageBody) {
-  var accountSid = 'ACf6818969ab2044a3c1ab811b7febee91';
-  var authToken = '48df1f449a3f06f4b2594934036fa478';
+  var post_data = querystring.stringify({
+        'username' : username,
+        'to'       : to,
+        'message'  : messageBody,
+        'from'     : 'Adedotun Taiwo'
+    });
 
-  //require the Twilio module and create a REST client
-  var client = require('twilio')(accountSid, authToken);
+    var post_options = {
+        host   : 'api.africastalking.com',
+        path   : '/version1/messaging',
+        method : 'POST',
 
-  client.messages.create({
-      to: to,
-      from: "+15719897801",
-      body: messageBody,
-  },
+        rejectUnauthorized : false,
+        requestCert        : true,
+        agent              : false,
 
-  function(err, message) {
-    if (message) {
-      console.log(`\n\n Your message to ${message.to} has been sent. \n`);
-    }
+        headers: {
+            'Content-Type' : 'application/x-www-form-urlencoded',
+            'Content-Length': post_data.length,
+            'Accept': 'application/json',
+            'apikey': apikey
+        }
+    };
 
-    if (err) {
-      console.log(err.message);
-    }
-  });
+    var post_req = https.request(post_options, function(res) {
+        res.setEncoding('utf8');
+        res.on('data', function (chunk) {
+            var jsObject   = JSON.parse(chunk);
+            var recipients = jsObject.SMSMessageData.Recipients;
+            if ( recipients.length > 0 ) {
+                for (var i = 0; i < recipients.length; ++i ) {
+                    var logStr  = 'number=' + recipients[i].number;
+                    logStr     += ';cost='   + recipients[i].cost;
+                    logStr     += ';status=' + recipients[i].status; // status is either "Success" or "error message"
+                    console.log(logStr);
+                    }
+                } else {
+                    console.log('Error while sending: ' + jsObject.SMSMessageData.Message);
+            }
+        });
+    });
+
+    // Add post parameters to the http request
+    post_req.write(post_data);
+
+    post_req.end();
 }
 
 if (process.argv[2]) {
