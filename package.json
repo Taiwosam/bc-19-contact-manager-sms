@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/Taiwosam/bc-19-contact-manager-sms#readme",
   "dependencies": {
+    "africastalking": "0.0.9",
+    "colors": "^1.1.2",
     "load-json-file": "^2.0.0",
     "prompt": "^1.0.0",
     "twilio": "^2.11.1",
