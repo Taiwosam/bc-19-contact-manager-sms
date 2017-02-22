@@ -2,16 +2,24 @@
 var writeJsonFile = require('write-json-file');
 var loadJsonFile = require('load-json-file');
 var prompt = require('prompt');
+var colors = require('colors');
 
 function search(contactName) {
   loadJsonFile('contacts.json').then(contacts => {
 
     // Contact names are stored with the first letters in upper case.
     // A user should get a result with a search query in any case.
-    contactName = contactName[0].toUpperCase() + contactName.slice(1).toLowerCase();
+    var firstAndLast = contactName.split(' ');
+
+    for (var i in firstAndLast) {
+      firstAndLast[i] = firstAndLast[i][0].toUpperCase() + firstAndLast[i].slice(1).toLowerCase();
+    }
+
+    contactName = firstAndLast.join(' ');
+
     if (contacts[contactName]) {
       console.log ('\n\n');
-      console.log(`Phone Number: ${contacts[contactName][0]} Email: ${contacts[contactName][1]}`);
+      console.log(`Phone Number: ${contacts[contactName][0]} Email: ${contacts[contactName][1]}`.cyan.blue);
       console.log('\n\n');
     }
 
