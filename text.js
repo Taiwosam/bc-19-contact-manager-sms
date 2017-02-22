@@ -1,5 +1,6 @@
 var writeJsonFile = require('write-json-file');
 var loadJsonFile = require('load-json-file');
+var colors = require('colors');
 
 var querystring = require('querystring');
 var https       = require('https');
@@ -11,8 +12,7 @@ function sendMessage(to, messageBody) {
   var post_data = querystring.stringify({
         'username' : username,
         'to'       : to,
-        'message'  : messageBody,
-        'from'     : 'Adedotun Taiwo'
+        'message'  : messageBody
     });
 
     var post_options = {
@@ -39,43 +39,44 @@ function sendMessage(to, messageBody) {
             var recipients = jsObject.SMSMessageData.Recipients;
             if ( recipients.length > 0 ) {
                 for (var i = 0; i < recipients.length; ++i ) {
-                    var logStr  = 'number=' + recipients[i].number;
-                    logStr     += ';cost='   + recipients[i].cost;
-                    logStr     += ';status=' + recipients[i].status; // status is either "Success" or "error message"
-                    console.log(logStr);
+                    var logStr  = `Your message to ${recipients[i].number} has been sent.`;
+                    console.log(`\n\n${logStr}\n\n`.green.bold);
                     }
                 } else {
-                    console.log('Error while sending: ' + jsObject.SMSMessageData.Message);
+                    console.log(`Error while sending: ${jsObject.SMSMessageData.Message}`.bold.red);
             }
         });
     });
 
-    // Add post parameters to the http request
     post_req.write(post_data);
 
     post_req.end();
 }
 
-if (process.argv[2]) {
+if (process.argv.indexOf('-m') !== -1) {
   var contactToText = process.argv[2];
   contactToText = contactToText[0].toUpperCase() + contactToText.slice(1).toLowerCase();
+
+  var body = process.argv[process.argv.indexOf('-m') + 1];
+
+  if (process.argv[process.argv.indexOf('-m') - 1].indexOf('text') !== -1) {
+    console.log('\n\n Please enter a name in your contact list \n'.red.bold);
+  }
 
   loadJsonFile('contacts.json').then(contacts => {
     if (contacts[contactToText]) {
       var to = contacts[contactToText][0];
-      if (process.argv.indexOf('-m') !== -1) {
-        var body = process.argv[process.argv.indexOf('-m') + 1];
+      if (body) {
         sendMessage(to, body);
       }
 
       else {
-        console.log ('\n\nPlease use the -m flag');
+        console.log('\n\nYou must enter a message body. Please do so and try again \n'.red.bold);
       }
     }
   });
 }
 
 else {
-  console.log('\n\n Please enter a contact name and message body in this format: \n\n');
-  console.log(' text <contact name> "message body"\n');
+  console.log ('\n\nPlease use the -m flag \n'.red.bold);
 }
