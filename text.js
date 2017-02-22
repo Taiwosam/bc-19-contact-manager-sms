@@ -48,8 +48,10 @@ function sendMessage(to, messageBody) {
                     var logStr  = `${recipients[i].status}: Your message to ${recipients[i].number} has been sent.`;
                     console.log(`\n\n${logStr}\n\n`.green.bold);
                     }
-                } else {
-                    console.log(`Error while sending: ${jsObject.SMSMessageData.Message}`.bold.red);
+                }
+
+            else {
+              console.log(`Error while sending: ${jsObject.SMSMessageData.Message}`.bold.red);
             }
         });
     });
