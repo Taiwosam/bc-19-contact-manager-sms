@@ -18,8 +18,32 @@ function addContact(contactName, phoneNumber, email) {
         result[promptStr] = result[promptStr].toLowerCase();
 
         if (result[promptStr] === 'y') {
-          contacts[contactName] = [phoneNumber, email];
-          writeJsonFile('contacts.json', contacts);
+          contacts[contactName] = [null, null];
+
+          if (isDuplicateNumber(phoneNumber, contacts)) {
+            var promptMessage = isDuplicateNumber(phoneNumber, contacts);
+            prompt.start();
+
+            prompt.get(promptMessage, function(err, result) {
+              if (result[promptMessage].toLowerCase() === 'y') {
+                contacts[contactName][0] = phoneNumber;
+                contacts[contactName][1] = email;
+                if (contacts[contactName][0] === null && contacts[contactName][1] === null) {
+                  delete contacts[contactName];
+                  writeJsonFile('contacts.json', contacts);
+                }
+
+                else {
+                  writeJsonFile('contacts.json', contacts);
+                }
+              }
+            });
+          }
+
+          else {
+            contacts[contactName] = [phoneNumber, email];
+            writeJsonFile('contacts.json', contacts);
+          }
         }
 
         else {
@@ -29,10 +53,56 @@ function addContact(contactName, phoneNumber, email) {
     }
 
     else {
-      contacts[contactName] = [phoneNumber, email];
-      writeJsonFile('contacts.json', contacts);
+      contacts[contactName] = [null, null];
+
+      if (isDuplicateNumber(phoneNumber, contacts)) {
+        var promptMessage = isDuplicateNumber(phoneNumber, contacts);
+        prompt.start();
+
+        prompt.get(promptMessage, function(err, result) {
+          if (result[promptMessage].toLowerCase() === 'y') {
+            contacts[contactName][0] = phoneNumber;
+            contacts[contactName][1] = email;
+            if (contacts[contactName][0] === null && contacts[contactName][1] === null) {
+              delete contacts[contactName];
+              writeJsonFile('contacts.json', contacts);
+            }
+
+            else {
+              writeJsonFile('contacts.json', contacts);
+            }
+          }
+        });
+      }
+
+      else {
+        contacts[contactName] = [phoneNumber, email];
+        writeJsonFile('contacts.json', contacts);
+      }
     }
   });
+}
+
+function isDuplicateNumber (phoneNumber, contacts) {
+	var numberConflicts = [];
+
+	for (var i in contacts) {
+		if (contacts[i][0] === phoneNumber) {
+			numberConflicts.push(i);
+		}
+	}
+
+	var numberPrompt = `${phoneNumber} already exists for:\n`;
+
+	if (numberConflicts.length > 0) {
+		for (var j of numberConflicts) {
+			numberPrompt += `${j}\n`;
+		}
+
+		numberPrompt += '\nContinue? (Y/N)';
+	}
+
+	return numberConflicts.length > 0 ? numberPrompt : null;
 }
 
 if (/^[a-zA-Z]+$/.exec(process.argv[3])) {
