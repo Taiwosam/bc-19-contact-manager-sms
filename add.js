@@ -42,6 +42,7 @@ function addContact(contactName, phoneNumber, email) {
                   }
 
                   else {
+                    console.log(`\n\n${contactName} was added successfully.\n`.cyan.bold);
                     writeJsonFile('contacts.json', contacts);
                   }
                 }
@@ -50,6 +51,7 @@ function addContact(contactName, phoneNumber, email) {
 
             else {
               contacts[contactName] = [phoneNumber, email];
+              console.log(`\n\n${contactName} was added successfully.\n`.cyan.bold);
               writeJsonFile('contacts.json', contacts);
             }
           }
@@ -78,6 +80,7 @@ function addContact(contactName, phoneNumber, email) {
             }
 
             else {
+              console.log(`\n\n${contactName} was added successfully.\n`.cyan.bold);
               writeJsonFile('contacts.json', contacts);
             }
           }
@@ -86,6 +89,7 @@ function addContact(contactName, phoneNumber, email) {
 
       else {
         contacts[contactName] = [phoneNumber, email];
+        console.log(`\n\n${contactName} was added successfully.\n`.cyan.bold);
         writeJsonFile('contacts.json', contacts);
       }
     }
