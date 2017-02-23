@@ -20,7 +20,7 @@ function search(contactName) {
 
     if (searchResults.length === 1 && contacts[searchResults[0]]) {
       console.log ('\n\n');
-      console.log(`Phone Number: ${contacts[searchResults[0]][0]} Email: ${contacts[searchResults[0]][1]}`.cyan.blue);
+      console.log(`Phone Number: ${contacts[searchResults[0]][0]} Email: ${contacts[searchResults[0]][1]}`.cyan.bold);
       console.log('\n\n');
     }
 
@@ -56,7 +56,7 @@ function search(contactName) {
           else {
             chosenContact = searchResults[ result[promptQuestion] - 1 ];
             console.log ('\n\n');
-            console.log(`Phone Number: ${contacts[chosenContact][0]} Email: ${contacts[chosenContact][1]}`.cyan.blue);
+            console.log(`Phone Number: ${contacts[chosenContact][0]} Email: ${contacts[chosenContact][1]}`.cyan.bold);
             console.log('\n\n');
           }
         });
