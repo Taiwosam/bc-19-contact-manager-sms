@@ -2,6 +2,7 @@ var writeJsonFile = require('write-json-file');
 var loadJsonFile = require('load-json-file');
 var colors = require('colors');
 var prompt = require('prompt');
+var fs = require('fs');
 
 var querystring = require('querystring');
 var https       = require('https');
@@ -61,9 +62,27 @@ function sendMessage(to, messageBody) {
     post_req.end();
 }
 
-if (process.argv.indexOf('-m') !== -1) {
-  if (process.argv[2] !== '-m' && process.argv[2].indexOf('text') === -1) {
 
+if (process.argv.indexOf('-m') !== -1) {
+
+  // Check if a message log exists. Create one if not, else, just skip.
+  fs.open('messageLog.json', 'wx', (err, fd) => {
+  if (err) {
+    if (err.code === "EEXIST") {
+      return;
+    } else {
+      throw err;
+    }
+  }
+
+  fs.writeFile('messageLog.json', JSON.stringify({}), function(err) {
+    if(err) {
+        console.log(err);
+    }
+  });
+});
+
+  if (process.argv[2] !== '-m' && process.argv[2].indexOf('text') === -1) {
     contactToText = [];
     for (var i of process.argv.slice(2)) {
       contactToText.push(i);
@@ -97,6 +116,23 @@ if (process.argv.indexOf('-m') !== -1) {
     if (searchResults.length === 1 && contacts[searchResults[0]]) {
       var to = contacts[searchResults[0]][0];
       if (body) {
+
+        loadJsonFile('messageLog.json').then(log => {
+          if (!log[searchResults[0]]) {
+            log[searchResults[0]] = [body];
+          }
+
+          else if (!!log[searchResults[0]]) {
+            log[searchResults[0]].push(body);
+          }
+
+          fs.writeFile('messageLog.json', JSON.stringify(log), function(err) {
+            if(err) {
+                console.log(err);
+            }
+          });
+        });
+
         sendMessage(to, body);
       }
 
@@ -144,6 +180,23 @@ if (process.argv.indexOf('-m') !== -1) {
             chosenContact = searchResults[ result[promptQuestion] - 1 ];
             var to = contacts[chosenContact][0];
 
+            loadJsonFile('messageLog.json').then(log => {
+              if (!log[chosenContact]) {
+                log[chosenContact] = [body];
+              }
+
+              else if (!!log[searchResults[0]]) {
+                log[chosenContact].push(body);
+              }
+
+              console.log(log);
+              fs.writeFile('messageLog.json', JSON.stringify(log), function(err) {
+                if(err) {
+                    console.log(err);
+                }
+              });
+            });
+
             sendMessage(to, body);
           }
         });
@@ -152,6 +205,39 @@ if (process.argv.indexOf('-m') !== -1) {
   });
 }
 
+else if (process.argv[2] === 'log') {
+  if (process.argv[3]) {
+    var contactName = process.argv.slice(3);
+    var contact = contactName.join(' ');
+
+    loadJsonFile('messageLog.json').then(log => {
+      console.log('\n\n');
+
+      for (var j of log[contact]) {
+        //var justifyName = 30
+        console.log(`${contact}: ${j}`.cyan.bold);
+      }
+
+      console.log('\n');
+    });
+  }
+
+  else if (!process.argv[3]) {
+    loadJsonFile('messageLog.json').then(log => {
+      console.log('\n\n');
+      for (var i in log) {
+        for (var j of log[i]) {
+          console.log(`${i}: ${j}`.cyan.bold);
+        }
+
+        console.log('\n');
+      }
+
+      console.log('\n');
+    });
+  }
+}
+
 else {
-  console.log ('\n\nPlease use the -m flag \n'.red.bold);
+  console.log ('\n\nPlease use the -m flag or log \n'.red.bold);
 }
