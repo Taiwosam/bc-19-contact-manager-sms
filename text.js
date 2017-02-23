@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var writeJsonFile = require('write-json-file');
 var loadJsonFile = require('load-json-file');
 var colors = require('colors');
@@ -148,7 +150,7 @@ if (process.argv.indexOf('-m') !== -1) {
       }
 
       if (searchResults.length === 0 && process.argv[process.argv.indexOf('-m') - 1].indexOf('text') === -1) {
-        console.log('\n\n You do not have a contact with such name. Please check and try again. \n\n'.red.bold);
+        console.log('\n\n You do not have a contact with such name. Please check and try again. \n'.red.bold);
         process.exit();
       }
 
@@ -173,7 +175,7 @@ if (process.argv.indexOf('-m') !== -1) {
 
         prompt.get(schema, function (err, result) {
           if (result[promptQuestion] > searchResults.length) {
-            console.log('\n\n The number you chose is out of range. Please try again. \n\n'.red.bold);
+            console.log('\n\n The number you chose is out of range. Please try again. \n'.red.bold);
           }
 
           else {
@@ -214,7 +216,6 @@ else if (process.argv[2] === 'log') {
       console.log('\n\n');
 
       for (var j of log[contact]) {
-        //var justifyName = 30
         console.log(`${contact}: ${j}`.cyan.bold);
       }
 
@@ -239,5 +240,5 @@ else if (process.argv[2] === 'log') {
 }
 
 else {
-  console.log ('\n\nPlease use the -m flag or log \n'.red.bold);
+  console.log ('\n\nPlease use the -m flag or log.\n'.red.bold);
 }
