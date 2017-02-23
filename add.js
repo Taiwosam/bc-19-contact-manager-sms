@@ -10,16 +10,18 @@ function addContact(contactName, phoneNumber, email) {
     if (contacts[contactName]) {
       if (!!email && !contacts[contactName][1]) {
         contacts[contactName][1] = email;
+        console.log(`\n\nEmail successfully added for ${contactName.green}.\n`.cyan.bold);
         writeJsonFile('contacts.json', contacts);
       }
 
       else if (!!phoneNumber && !contacts[contactName][0]) {
         contacts[contactName][0] = phoneNumber;
+        console.log(`\n\nEmail successfully added for ${contactName.green}.\n`.cyan.bold);
         writeJsonFile('contacts.json', contacts);
       }
 
       else {
-      	var promptStr = `\n\n${contactName} already exists. Do you want to override contact? (Y/N)\n`;
+      	var promptStr = `\n\n${contactName.cyan} already exists. Do you want to override contact? (Y/N)\n`;
 
         prompt.start();
         prompt.get(promptStr, function(err, result) {
@@ -42,7 +44,7 @@ function addContact(contactName, phoneNumber, email) {
                   }
 
                   else {
-                    console.log(`\n\n${contactName} was added successfully.\n`.cyan.bold);
+                    console.log(`\n\n${contactName.green} was added successfully.\n`.cyan.bold);
                     writeJsonFile('contacts.json', contacts);
                   }
                 }
@@ -51,7 +53,7 @@ function addContact(contactName, phoneNumber, email) {
 
             else {
               contacts[contactName] = [phoneNumber, email];
-              console.log(`\n\n${contactName} was added successfully.\n`.cyan.bold);
+              console.log(`\n\n${contactName.green} was added successfully.\n`.cyan.bold);
               writeJsonFile('contacts.json', contacts);
             }
           }
@@ -80,7 +82,7 @@ function addContact(contactName, phoneNumber, email) {
             }
 
             else {
-              console.log(`\n\n${contactName} was added successfully.\n`.cyan.bold);
+              console.log(`\n\n${contactName.green} was added successfully.\n`.cyan.bold);
               writeJsonFile('contacts.json', contacts);
             }
           }
@@ -89,7 +91,7 @@ function addContact(contactName, phoneNumber, email) {
 
       else {
         contacts[contactName] = [phoneNumber, email];
-        console.log(`\n\n${contactName} was added successfully.\n`.cyan.bold);
+        console.log(`\n\n${contactName.green} was added successfully.\n`.cyan.bold);
         writeJsonFile('contacts.json', contacts);
       }
     }
