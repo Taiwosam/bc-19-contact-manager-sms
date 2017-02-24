@@ -1,2 +1,5 @@
 /node_modules
 contacts.json
+messageLog.json
+/Tentative
+sendgrid.env
