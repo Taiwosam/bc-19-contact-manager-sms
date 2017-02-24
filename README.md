@@ -82,6 +82,7 @@ node text log <contact name>
 node mail <contact name> -m "message body"
 ```
 **To use the mail.js file, please provide your API KEY from SendGrid.com**
+
 **To use a different `from email` from mine, input it in the `from` field in the code**
 
 ### Contribute
@@ -91,8 +92,8 @@ node mail <contact name> -m "message body"
 4. Push your changes to your repository
 5. Submit a pull request
 
-- Issue Tracker: https://github.com/Jerryodeghe/andela-bc19-group5/issues
-- Source Code: https://github.com/Jerryodeghe/andela-bc19-group5
+- Issue Tracker: https://github.com/Taiwosam/bc-19-contact-manager-sms/issues
+- Source Code: https://github.com/Taiwosam/bc-19-contact-manager-sms
 
 ### Support
 If you are having issues, please let me know.
