@@ -4,7 +4,15 @@
   "description": "A contact manager with ability to send SMS",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "search": "node ./bin/search"
+  },
+  "bin": {
+    "text": "text.js",
+    "search": "search.js",
+    "add": "add.js",
+    "delete": "delete.js",
+    "mail": "mail.js",
+    "viewall": "viewall.js"
   },
   "repository": {
     "type": "git",
@@ -18,9 +26,11 @@
   "homepage": "https://github.com/Taiwosam/bc-19-contact-manager-sms#readme",
   "dependencies": {
     "africastalking": "0.0.9",
+    "cli-table": "^0.3.1",
     "colors": "^1.1.2",
     "load-json-file": "^2.0.0",
     "prompt": "^1.0.0",
+    "sendgrid": "^4.7.1",
     "twilio": "^2.11.1",
     "write-json-file": "^2.0.0"
   }
