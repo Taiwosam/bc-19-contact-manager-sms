@@ -33,10 +33,12 @@ node add init
 node add -n <contact name> -p <phone number> -e <email>
 ```
 *You can add either a phone number or email but never none of both*
+
 *You can also add a phone number or email to a contact that didn't have them*
 
 ###### Deleting
 **You can either delete a particular contact or delete everything in your contact list**
+
 *To delete all entries:*
 ```
 node delete deleteall
@@ -79,6 +81,8 @@ node text log <contact name>
 ```
 node mail <contact name> -m "message body"
 ```
+**To use the mail.js file, please provide your API KEY from SendGrid.com**
+**To use a different `from email` from mine, input it in the `from` field in the code**
 
 ### Contribute
 1. Fork this repository
