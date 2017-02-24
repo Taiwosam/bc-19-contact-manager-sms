@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var writeJsonFile = require('write-json-file');
 var loadJsonFile = require('load-json-file');
 var colors = require('colors');
