@@ -17,7 +17,7 @@ else {
 
     loadJsonFile('contacts.json').then(contacts => {
       var contactToDelete = process.argv.slice(2);
-      var contactName = contactToDelete.join(' ')
+      var contactName = contactToDelete.join(' ').toLowerCase();
 
       var contactNames = Object.keys(contacts);
       var searchResults = [];
